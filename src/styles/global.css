@@ -13,3 +13,11 @@
 body {
     font-family: 'Urbanist', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
+::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }

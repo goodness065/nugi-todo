@@ -4,7 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        textPrimary: "#004ef1"
+        brandBlue: "#004ef1",
+        textblack: "#000715",
+        subtext: "#667085",
+        stroke: "#EFEFF4"
       }
     },
   },
