@@ -70,9 +70,9 @@ Your implementation will be evaluated based on:
 
 When you've completed the project, please:
 
-Push your code to a new GitHub repository
-Deploy your app to a platform like Vercel or Netlify
-Submit the links to your repository and deployed app
+- Push your code to a new GitHub repository
+- Deploy your app to a platform like Vercel or Netlify
+- Submit the links to your repository and deployed app
 
 ### Additional Notes
 
