@@ -58,9 +58,7 @@ const CompletedTodos: React.FC = () => {
     }
 
     if (isError) {
-      return (
-       <TodoError refetch={refetch} />
-      );
+      return <TodoError refetch={refetch} />;
     }
 
     if (completeTodos?.length === 0) {
@@ -112,7 +110,7 @@ const CompletedTodos: React.FC = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <section className="space-y-6">
-        <div className="flex justify-between items-center gap-5 flex-wrap w-full">
+        <div className="flex flex-wrap items-center justify-between w-full gap-5">
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-2xl sm:text-[32px]">
               Completed todos

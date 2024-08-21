@@ -47,16 +47,16 @@ const AddTodo = ({ refetch }: { refetch: any }) => {
         description="Add a task to you todo list"
         trigger={<Button title="+ Add" className="w-[100px]" />}
       >
-        <form className="tutorial gap-2" onSubmit={handleSubmit(onSubmit)}>
+        <form className="gap-2 tutorial" onSubmit={handleSubmit(onSubmit)}>
           <input
             {...register("title")}
             type="text"
             name="title"
             placeholder="Enter title"
-            className="w-full h-12 outline-none p-1 border border-gray-400 rounded-md"
+            className="w-full h-12 p-1 border border-gray-400 rounded-md outline-none"
           />
           {errors.title && (
-            <div className="text-red-500">{errors.title.message}</div>
+            <div className="text-sm text-red-500">{errors.title.message}</div>
           )}
 
           <Flex gap="3" mt="4" justify="end">

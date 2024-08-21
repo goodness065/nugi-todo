@@ -1,14 +1,14 @@
-import Navbar from "../components/layout/navbar";
+import { Link } from "react-router-dom";
+import Button from "../components/common/button";
 
 const NotFound = () => {
   return (
     <div>
-      {" "}
-      <Navbar />
-      <div className="bg-[#f6f9ff] pt-[70px] min-h-screen">
-        <div className="layout-container pt-10">
-          <div className="h-[calc(100vh-10px)] w-full flex justify-center items-center">
+      <div className="bg-[#f6f9ff] min-h-screen">
+        <div className="pt-10 layout-container">
+          <div className="flex flex-col items-center justify-center w-full h-screen space-y-2">
             <p>Looks like you got lost</p>
+            <Link to="/"><Button title="Go home" /></Link>
           </div>
         </div>
       </div>
