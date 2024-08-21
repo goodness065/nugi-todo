@@ -33,11 +33,11 @@ const ActiveTodos = () => {
       return;
     }
 
-    const reorderedTodos = Array.from(todos); // Assume `todos` is your state
+    const reorderedTodos = Array.from(todos); 
     const [movedTodo] = reorderedTodos.splice(source.index, 1);
     reorderedTodos.splice(destination.index, 0, movedTodo);
 
-    setTodos(reorderedTodos); // Update your state with the new order
+    setTodos(reorderedTodos);
   };
 
   const filteredTodos = todos.filter((todo) =>
@@ -109,7 +109,7 @@ const ActiveTodos = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <section className="space-y-6">
-        <div className="flex justify-between items-center gap-5 flex-wrap w-full">
+        <div className="flex flex-wrap items-center justify-between w-full gap-5">
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-2xl sm:text-[32px]">
               Active todos{" "}

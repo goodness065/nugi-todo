@@ -33,11 +33,11 @@ const AllTodos: React.FC = () => {
       return;
     }
 
-    const reorderedTodos = Array.from(todos); // Assume `todos` is your state
+    const reorderedTodos = Array.from(todos); 
     const [movedTodo] = reorderedTodos.splice(source.index, 1);
     reorderedTodos.splice(destination.index, 0, movedTodo);
 
-    setTodos(reorderedTodos); // Update your state with the new order
+    setTodos(reorderedTodos);
   };
 
   const filteredTodos = todos.filter((todo) =>
@@ -110,7 +110,7 @@ const AllTodos: React.FC = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <section className="space-y-6">
-        <header className="flex justify-between items-center w-full">
+        <header className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-2xl sm:text-[32px]">All Todos</h2>
             {data?.data && (
@@ -122,7 +122,7 @@ const AllTodos: React.FC = () => {
           <AddTodo refetch={refetch} />
         </header>
 
-        <div className="w-full flex justify-center">
+        <div className="flex justify-center w-full">
         <TextInput
             type="text"
             value={searchQuery}
