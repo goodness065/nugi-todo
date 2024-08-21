@@ -6,7 +6,7 @@ const PageLayout = () => {
     <div>
       <Navbar />
         <div className="bg-[#f6f9ff] pt-[70px] min-h-screen">
-        <div className="layout-container pt-10">
+        <div className="pt-10 layout-container">
           <Outlet />
         </div>
         </div>

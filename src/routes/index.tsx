@@ -6,6 +6,7 @@ import CompletedTodos from "../pages/completed-todos";
 import NotFound from "../pages/not-found";
 import { Provider } from "react-redux";
 import { Store } from "../store";
+import Login from "../pages/login";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,11 @@ export const router = createBrowserRouter([
         path: "completed",
         element: <CompletedTodos />,
       },
+      {
+        path: "login",
+        element: <Login />,
+      },
     ],
   },
 ]);
+
