@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from 'sonner';
 import "./styles/global.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/index.tsx";
@@ -19,7 +20,8 @@ async function enableMocking() {
 enableMocking().then(() => {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <Toaster richColors position="top-center" />
+      <RouterProvider router={router}  />
     </StrictMode>
   );
 });

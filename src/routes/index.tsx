@@ -4,11 +4,17 @@ import AllTodos from "../pages/all-todos";
 import ActiveTodos from "../pages/active-todos";
 import CompletedTodos from "../pages/completed-todos";
 import NotFound from "../pages/not-found";
+import { Provider } from "react-redux";
+import { Store } from "../store";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <PageLayout />,
+    element: (
+      <Provider store={Store}>
+        <PageLayout />
+      </Provider>
+    ),
     errorElement: <NotFound />,
     children: [
       { index: true, element: <AllTodos /> },

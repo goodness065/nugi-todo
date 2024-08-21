@@ -1,55 +1,75 @@
-import { Theme, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import Button from "../common/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { useState } from "react";
+import Modal from "../common/modal";
+import { useAddTodoMutation } from "../../service/api";
 
-const AddTodo = () => {
+const schema = z.object({
+  title: z.string().min(1),
+});
+
+type FormFields = z.infer<typeof schema>;
+
+const AddTodo = ({ refetch }: { refetch: any }) => {
+  const [addTodo, { isLoading }] = useAddTodoMutation();
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log(data);
+    try {
+      await addTodo(data);
+      refetch();
+      reset();
+      setOpen(false);
+    } catch (error) {
+      // @ts-ignore
+      toast.error(error?.message ?? "an error occured");
+    }
+  };
+
   return (
-    <Theme className="!min-h-full">
-      {" "}
-      <Dialog.Root>
-        <Dialog.Trigger>
-          <Button title="+ Add" className="w-[100px]" />
-        </Dialog.Trigger>
-
-        <Dialog.Content maxWidth="450px">
-          <Dialog.Title>Edit profile</Dialog.Title>
-          <Dialog.Description size="2" mb="4">
-            Make changes to your profile.
-          </Dialog.Description>
-
-          <Flex direction="column" gap="3">
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Name
-              </Text>
-              <TextField.Root
-                defaultValue="Freja Johnsen"
-                placeholder="Enter your full name"
-              />
-            </label>
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Email
-              </Text>
-              <TextField.Root
-                defaultValue="freja@example.com"
-                placeholder="Enter your email"
-              />
-            </label>
-          </Flex>
+    <div>
+      <Modal
+        isOpen={open}
+        onOpenChange={setOpen}
+        title="Add"
+        description="Add a task to you todo list"
+        trigger={<Button title="+ Add" className="w-[100px]" />}
+      >
+        <form className="tutorial gap-2" onSubmit={handleSubmit(onSubmit)}>
+          <input
+            {...register("title")}
+            type="text"
+            name="title"
+            placeholder="Enter title"
+            className="w-full h-12 outline-none p-1 border border-gray-400 rounded-md"
+          />
+          {errors.title && (
+            <div className="text-red-500">{errors.title.message}</div>
+          )}
 
           <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <Button variant="soft" color="gray">
-                Cancel
-              </Button>
-            </Dialog.Close>
-            <Dialog.Close>
-              <Button>Save</Button>
-            </Dialog.Close>
+            <Button
+              onClick={() => setOpen(false)}
+              title="Cancel"
+              intent="secondary"
+            />
+            <Button type="submit" title="Submit" isLoading={isLoading} />
           </Flex>
-        </Dialog.Content>
-      </Dialog.Root>{" "}
-    </Theme>
+        </form>
+      </Modal>
+    </div>
   );
 };
 
