@@ -1,5 +1,7 @@
 import { Outlet, RouteObject, redirect } from "react-router-dom";
-import Login from "./routes/login";
+import Login, {
+  action as loginAction,
+} from "./routes/login";
 
 export const authRoutes: RouteObject = {
   loader: async () => {
@@ -16,6 +18,7 @@ export const authRoutes: RouteObject = {
     {
       path: "login",
       element: <Login />,
+      action: loginAction,
     },
   ],
 };

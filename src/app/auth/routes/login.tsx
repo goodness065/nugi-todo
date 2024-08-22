@@ -1,11 +1,15 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { login } from "../slice/auth-slice";
+import {
+  useSubmit,
+  ActionFunctionArgs,
+  Form,
+  redirect,
+} from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Button from "../../../components/common/button";
+import { saveSession } from "../utils/auth";
 
 const schema = z.object({
   email: z.string().email(),
@@ -14,30 +18,32 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-const Login: React.FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  saveSession(JSON.stringify(updates));
+  return redirect(`/`);
+}
 
+const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
+    mode: "onBlur",
   });
-
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
-    const token = "random-token";
-    dispatch(login({ token }));
-    navigate("/");
-  };
+  const submit = useSubmit();
 
   return (
     <div className="w-full h-[calc(100vh-180px)] flex justify-center items-center flex-col">
       <h2 className="font-semibold text-2xl sm:text-[32px] mb-2">Login</h2>
       <div className="max-w-[400px] w-full border border-stroke rounded-lg p-4 bg-white">
-        <form className="space-y-4 tutorial" onSubmit={handleSubmit(onSubmit)}>
+        <Form
+          className="space-y-4 tutorial"
+          onSubmit={handleSubmit((data) => submit(data, { method: "POST" }))}
+        >
           <div>
             <input
               {...register("email")}
@@ -63,7 +69,7 @@ const Login: React.FC = () => {
             )}
           </div>
           <Button type="submit" title="Submit" isLoading={isSubmitting} />
-        </form>
+        </Form>
       </div>
     </div>
   );
