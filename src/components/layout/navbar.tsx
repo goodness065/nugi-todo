@@ -3,7 +3,7 @@ import { LogoIcon } from "../icons/logo.icon";
 
 import Logo from "../../assets/icon/syncventory-logo.svg";
 import { useDispatch } from "react-redux";
-import { logout } from "../../slice/auth-slice";
+import { logout } from "../../app/auth/slice/auth-slice";
 
 const Navbar = () => {
   const location = useLocation();

@@ -5,7 +5,7 @@ import { login } from "../slice/auth-slice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import Button from "../components/common/button";
+import Button from "../../../components/common/button";
 
 const schema = z.object({
   email: z.string().email(),

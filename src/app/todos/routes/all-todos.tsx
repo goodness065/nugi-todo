@@ -1,43 +1,44 @@
-import { useEffect, useState } from "react";
-import { Empty } from "../components/common/empty-view";
-import LoadingView from "../components/loading-view";
-import TodoItem from "../components/todos/todo-item";
-import { useGetTodosQuery } from "../service/api";
-import { Todo } from "../entities/todos";
+import React, { useEffect, useState } from "react";
+import LoadingView from "../../../components/loading-view";
+import AddTodo from "../../../components/sections/add-todo";
+import TodoItem from "../../../components/todos/todo-item";
+import "@radix-ui/themes/styles.css";
+import { useGetTodosQuery } from "../../../service/api";
+import { Empty } from "../../../components/common/empty-view";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import TextInput from "../components/common/text-input";
-import TodoError from "../components/todos/todo-error";
+import { Todo } from "../../../entities/todos";
+import TextInput from "../../../components/common/text-input";
+import TodoError from "../../../components/todos/todo-error";
 
-const ActiveTodos = () => {
+const AllTodos: React.FC = () => {
   const { data, isLoading, isError, refetch, isFetching } = useGetTodosQuery();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     if (data?.data) {
-      const activeTodos = data.data.filter((todo) => !todo.isCompleted);
-      const savedOrder = localStorage.getItem("activeTodoOrder");
+
+      const savedOrder = localStorage.getItem("todoOrder");
       let orderedTodos: Todo[] = [];
 
       if (savedOrder) {
         const order = JSON.parse(savedOrder);
         const ordered = order
-          .map((id: string) => activeTodos.find((todo) => todo.id === id))
+          .map((id: string) => data.data.find((todo) => todo.id === id))
           .filter(Boolean) as Todo[];
 
-        const unorderedTodos = activeTodos.filter(
+        const unorderedTodos = data.data.filter(
           (todo) => !order.includes(todo.id)
         );
 
         orderedTodos = [...unorderedTodos.reverse(), ...ordered];
       } else {
-
-        orderedTodos = activeTodos.slice().reverse();
+        orderedTodos = data.data.slice().reverse();
       }
 
       setTodos(orderedTodos);
@@ -58,10 +59,8 @@ const ActiveTodos = () => {
     setTodos(reorderedTodos);
 
     const todoOrder = reorderedTodos.map((todo) => todo.id);
-    localStorage.setItem("activeTodoOrder", JSON.stringify(todoOrder));
+    localStorage.setItem("todoOrder", JSON.stringify(todoOrder));
   };
-
-  const activeTodos = data?.data.filter((todo) => !todo.isCompleted);
 
   const filteredTodos = todos.filter((todo) =>
     todo.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -82,11 +81,11 @@ const ActiveTodos = () => {
       return <TodoError refetch={refetch} />;
     }
 
-    if (activeTodos?.length === 0) {
-      return <Empty title="No active todos found" desc="" />;
+    if (data?.data.length === 0) {
+      return <Empty title="No todos found" desc="" />;
     }
 
-    if (filteredTodos.length === 0 && searchQuery.length !== 0) {
+    if (filteredTodos?.length === 0 && searchQuery.length !== 0) {
       return <Empty title="No todos found" desc="" />;
     }
 
@@ -131,23 +130,25 @@ const ActiveTodos = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <section className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between w-full gap-5">
+        <header className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
-            <h2 className="font-semibold text-2xl sm:text-[32px]">
-              Active Todos{" "}
-            </h2>{" "}
-            {activeTodos && activeTodos?.length > 0 && (
+            <h2 className="font-semibold text-2xl sm:text-[32px]">All Todos</h2>
+            {data?.data && (
               <div className="bg-brandBlue w-6 h-6 flex items-center justify-center p-1 rounded-[32px]">
-                <p className="text-xs text-white">{activeTodos?.length}</p>
+                <p className="text-xs text-white">{data.data.length}</p>
               </div>
             )}
           </div>
+          <AddTodo refetch={refetch} />
+        </header>
+
+        <div className="flex justify-center w-full">
           <TextInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search todos"
-            className="max-w-[300px]"
+            className="max-w-[600px]"
           />
         </div>
 
@@ -159,4 +160,4 @@ const ActiveTodos = () => {
   );
 };
 
-export default ActiveTodos;
+export default AllTodos;

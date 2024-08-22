@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import LoadingView from "../components/loading-view";
-import TodoItem from "../components/todos/todo-item";
+import LoadingView from "../../../components/loading-view";
+import TodoItem from "../../../components/todos/todo-item";
 import "@radix-ui/themes/styles.css";
-import { useGetTodosQuery } from "../service/api";
-import { Empty } from "../components/common/empty-view";
+import { useGetTodosQuery } from "../../../service/api";
+import { Empty } from "../../../components/common/empty-view";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Todo } from "../entities/todos";
-import TextInput from "../components/common/text-input";
-import TodoError from "../components/todos/todo-error";
+import { Todo } from "../../../entities/todos";
+import TextInput from "../../../components/common/text-input";
+import TodoError from "../../../components/todos/todo-error";
 
 const CompletedTodos: React.FC = () => {
   const { data, isLoading, isError, refetch, isFetching } = useGetTodosQuery();

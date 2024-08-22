@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from 'sonner';
 import "./styles/global.css";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/index.tsx";
+import { router } from "./app/router";
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== "development") {

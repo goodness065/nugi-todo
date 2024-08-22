@@ -1,8 +1,8 @@
 import { RouteObject, redirect } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import AllTodos from '../pages/all-todos';
-import ActiveTodos from '../pages/active-todos';
-import CompletedTodos from '../pages/completed-todos';
+import AllTodos from './routes/all-todos';
+import ActiveTodos from './routes/active-todos';
+import CompletedTodos from './routes/completed-todos';
 
 export const authenticatedRoutes: RouteObject = {
   loader: async () => {
