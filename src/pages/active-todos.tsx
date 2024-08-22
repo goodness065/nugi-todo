@@ -17,12 +17,30 @@ const ActiveTodos = () => {
   const { data, isLoading, isError, refetch, isFetching } = useGetTodosQuery();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const activeTodos = data?.data.filter((todo) => !todo.isCompleted);
 
   useEffect(() => {
     if (data?.data) {
-      const reverseData = data.data.slice().reverse();
-      setTodos(reverseData.filter((todo) => !todo.isCompleted));
+      const activeTodos = data.data.filter((todo) => !todo.isCompleted);
+      const savedOrder = localStorage.getItem("activeTodoOrder");
+      let orderedTodos: Todo[] = [];
+
+      if (savedOrder) {
+        const order = JSON.parse(savedOrder);
+        const ordered = order
+          .map((id: string) => activeTodos.find((todo) => todo.id === id))
+          .filter(Boolean) as Todo[];
+
+        const unorderedTodos = activeTodos.filter(
+          (todo) => !order.includes(todo.id)
+        );
+
+        orderedTodos = [...unorderedTodos.reverse(), ...ordered];
+      } else {
+
+        orderedTodos = activeTodos.slice().reverse();
+      }
+
+      setTodos(orderedTodos);
     }
   }, [data]);
 
@@ -33,12 +51,17 @@ const ActiveTodos = () => {
       return;
     }
 
-    const reorderedTodos = Array.from(todos); 
+    const reorderedTodos = Array.from(todos);
     const [movedTodo] = reorderedTodos.splice(source.index, 1);
     reorderedTodos.splice(destination.index, 0, movedTodo);
 
     setTodos(reorderedTodos);
+
+    const todoOrder = reorderedTodos.map((todo) => todo.id);
+    localStorage.setItem("activeTodoOrder", JSON.stringify(todoOrder));
   };
+
+  const activeTodos = data?.data.filter((todo) => !todo.isCompleted);
 
   const filteredTodos = todos.filter((todo) =>
     todo.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -56,16 +79,14 @@ const ActiveTodos = () => {
     }
 
     if (isError) {
-      return (
-        <TodoError refetch={refetch} />
-      );
+      return <TodoError refetch={refetch} />;
     }
 
     if (activeTodos?.length === 0) {
       return <Empty title="No active todos found" desc="" />;
     }
 
-    if (filteredTodos?.length === 0 && searchQuery.length !== 0) {
+    if (filteredTodos.length === 0 && searchQuery.length !== 0) {
       return <Empty title="No todos found" desc="" />;
     }
 
@@ -106,17 +127,18 @@ const ActiveTodos = () => {
       </Droppable>
     );
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <section className="space-y-6">
         <div className="flex flex-wrap items-center justify-between w-full gap-5">
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-2xl sm:text-[32px]">
-              Active todos{" "}
+              Active Todos{" "}
             </h2>{" "}
-            {activeTodos && (
+            {activeTodos && activeTodos?.length > 0 && (
               <div className="bg-brandBlue w-6 h-6 flex items-center justify-center p-1 rounded-[32px]">
-                <p className="text-xs text-white">{activeTodos.length}</p>
+                <p className="text-xs text-white">{activeTodos?.length}</p>
               </div>
             )}
           </div>

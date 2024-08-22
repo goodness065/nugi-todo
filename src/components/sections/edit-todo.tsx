@@ -3,7 +3,7 @@ import Button from "../common/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditIcon } from "../icons/edit.icon";
 import Modal from "../common/modal";
 import { useUpdateTodoMutation } from "../../service/api";
@@ -28,12 +28,19 @@ const EditTodo = ({ title, id, refetch }: IEditTodo) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormFields>({
     defaultValues: {
       title: title,
     },
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    reset({
+      title: title,
+    });
+  }, [title, reset]);
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
@@ -59,8 +66,13 @@ const EditTodo = ({ title, id, refetch }: IEditTodo) => {
           </button>
         }
       >
-        <form className="tutorial gap-2" onSubmit={handleSubmit(onSubmit)}>
-          <input {...register("title")} className="w-full h-12 outline-none p-1 border border-gray-400 rounded-md" type="text" placeholder="Enter title" />
+        <form className="gap-2 tutorial" onSubmit={handleSubmit(onSubmit)}>
+          <input
+            {...register("title")}
+            className="w-full h-12 p-1 border border-gray-400 rounded-md outline-none"
+            type="text"
+            placeholder="Enter title"
+          />
           {errors.title && (
             <div className="text-red-500">{errors.title.message}</div>
           )}

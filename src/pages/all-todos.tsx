@@ -22,7 +22,26 @@ const AllTodos: React.FC = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setTodos(data.data.slice().reverse());
+
+      const savedOrder = localStorage.getItem("todoOrder");
+      let orderedTodos: Todo[] = [];
+
+      if (savedOrder) {
+        const order = JSON.parse(savedOrder);
+        const ordered = order
+          .map((id: string) => data.data.find((todo) => todo.id === id))
+          .filter(Boolean) as Todo[];
+
+        const unorderedTodos = data.data.filter(
+          (todo) => !order.includes(todo.id)
+        );
+
+        orderedTodos = [...unorderedTodos.reverse(), ...ordered];
+      } else {
+        orderedTodos = data.data.slice().reverse();
+      }
+
+      setTodos(orderedTodos);
     }
   }, [data]);
 
@@ -33,11 +52,14 @@ const AllTodos: React.FC = () => {
       return;
     }
 
-    const reorderedTodos = Array.from(todos); 
+    const reorderedTodos = Array.from(todos);
     const [movedTodo] = reorderedTodos.splice(source.index, 1);
     reorderedTodos.splice(destination.index, 0, movedTodo);
 
     setTodos(reorderedTodos);
+
+    const todoOrder = reorderedTodos.map((todo) => todo.id);
+    localStorage.setItem("todoOrder", JSON.stringify(todoOrder));
   };
 
   const filteredTodos = todos.filter((todo) =>
@@ -56,9 +78,7 @@ const AllTodos: React.FC = () => {
     }
 
     if (isError) {
-      return (
-        <TodoError refetch={refetch} />
-      );
+      return <TodoError refetch={refetch} />;
     }
 
     if (data?.data.length === 0) {
@@ -123,7 +143,7 @@ const AllTodos: React.FC = () => {
         </header>
 
         <div className="flex justify-center w-full">
-        <TextInput
+          <TextInput
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

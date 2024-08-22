@@ -26,7 +26,6 @@ const AddTodo = ({ refetch }: { refetch: any }) => {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
     try {
       await addTodo(data);
       refetch();
